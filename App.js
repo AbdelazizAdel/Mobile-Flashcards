@@ -1,21 +1,65 @@
-import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import DeckList from './components/DeckList';
+import NewDeck from './components/NewDeck';
+import Deck from './components/Deck';
+import NewFlashcard from './components/NewFlashcard';
+import Flashcard from './components/Flashcard';
+import QuizResult from './components/QuizResult';
+import { NoQuestions } from './components/Deck';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import reducer from './reducers/index';
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { StatusBar, View } from 'react-native';
+import { black, white } from './utils/colors';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+const Tab = createMaterialTopTabNavigator();
+const Stack = createStackNavigator();
+
+function TabNavigation() {
+	return (
+		<Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: black } }}>
+			<Tab.Screen name="Home" component={DeckList} />
+			<Tab.Screen name="New Deck" component={NewDeck} />
+		</Tab.Navigator>
+	);
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+export default function App() {
+	return (
+		<NavigationContainer>
+			<Provider store={createStore(reducer)}>
+				<View style={{ flex: 1 }}>
+					<StatusBar />
+					<Stack.Navigator>
+						<Stack.Screen
+							name="Home"
+							component={TabNavigation}
+							options={{ headerShown: false }} />
+						<Stack.Screen
+							name="Deck"
+							component={Deck}
+							options={({ route }) => ({ title: route.params.title })} />
+						<Stack.Screen name="Add Flashcard" component={NewFlashcard} />
+						<Stack.Screen
+							name="No Questions"
+							component={NoQuestions}
+							options={({ route }) => ({ title: route.params.title })} />
+						<Stack.Screen
+							name="Quiz"
+							component={Flashcard} />
+						<Stack.Screen
+							name="Quiz Result"
+							component={QuizResult} />
+					</Stack.Navigator>
+				</View>
+			</Provider>
+		</NavigationContainer>
+
+	);
+}
+
