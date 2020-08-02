@@ -1,8 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableHighlight, StyleSheet } from 'react-native';
 import { black, light_black, white, light_gray } from '../utils/colors';
+import { setLocalNotification, clearLocalNotification } from '../utils/storage';
 
 class QuizResult extends React.Component {
+
+    componentDidMount() {
+        clearLocalNotification().then(setLocalNotification)
+    }
 
     handleRestartQuiz = () => {
         const title = this.props.route.params.title;

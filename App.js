@@ -15,6 +15,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar, View } from 'react-native';
 import { black, white } from './utils/colors';
+import { setLocalNotification } from './utils/storage';
 
 const Tab = createMaterialTopTabNavigator();
 const Stack = createStackNavigator();
@@ -28,38 +29,44 @@ function TabNavigation() {
 	);
 }
 
+export default class App extends React.Component {
 
-export default function App() {
-	return (
-		<NavigationContainer>
-			<Provider store={createStore(reducer)}>
-				<View style={{ flex: 1 }}>
-					<StatusBar />
-					<Stack.Navigator>
-						<Stack.Screen
-							name="Home"
-							component={TabNavigation}
-							options={{ headerShown: false }} />
-						<Stack.Screen
-							name="Deck"
-							component={Deck}
-							options={({ route }) => ({ title: route.params.title })} />
-						<Stack.Screen name="Add Flashcard" component={NewFlashcard} />
-						<Stack.Screen
-							name="No Questions"
-							component={NoQuestions}
-							options={({ route }) => ({ title: route.params.title })} />
-						<Stack.Screen
-							name="Quiz"
-							component={Flashcard} />
-						<Stack.Screen
-							name="Quiz Result"
-							component={QuizResult} />
-					</Stack.Navigator>
-				</View>
-			</Provider>
-		</NavigationContainer>
+	componentDidMount() {
+		setLocalNotification();
+	}
 
-	);
+	render() {
+		return (
+			<NavigationContainer>
+				<Provider store={createStore(reducer)}>
+					<View style={{ flex: 1 }}>
+						<StatusBar />
+						<Stack.Navigator>
+							<Stack.Screen
+								name="Home"
+								component={TabNavigation}
+								options={{ headerShown: false }} />
+							<Stack.Screen
+								name="Deck"
+								component={Deck}
+								options={({ route }) => ({ title: route.params.title })} />
+							<Stack.Screen name="Add Flashcard" component={NewFlashcard} />
+							<Stack.Screen
+								name="No Questions"
+								component={NoQuestions}
+								options={({ route }) => ({ title: route.params.title })} />
+							<Stack.Screen
+								name="Quiz"
+								component={Flashcard} />
+							<Stack.Screen
+								name="Quiz Result"
+								component={QuizResult} />
+						</Stack.Navigator>
+					</View>
+				</Provider>
+			</NavigationContainer >
+
+		);
+	}
 }
 
